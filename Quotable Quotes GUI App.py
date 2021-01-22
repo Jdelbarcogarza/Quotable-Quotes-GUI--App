@@ -82,7 +82,7 @@ def main():
         window.title("Generate a random quote")
 
         # Se declara el tamaño mínimo de esta ventana
-        window.minsize(620,250)
+        window.minsize(600,300)
 
         # Se declra la funcionalidad de la ventana
         window.rowconfigure([0,1],weight=1)
@@ -109,10 +109,14 @@ def main():
         # query hecha a la API 
         frm_QuoteDisplay = tk.LabelFrame(window)
 
+        '''
+        OJO, AQUI LO QUE NOS AYUDÓ A HACER EL WRAP DE QUOTES MUY LARGAS FUE EL 
+        ATRIBUTO DE WRAPLENGTH EN EL LABEL DE QUOTECONTENT
+        '''
         lbl_QuoteContent = tk.Label(
             frm_QuoteDisplay, 
             text="Your quote will appear here once you click the button below.",
-            bg="white", relief=tk.RAISED, width=30, height=5)
+            bg="white", relief=tk.RAISED, width=30, height=5,  wraplength=300 )
 
         lbl_QuoteCategory = tk.Label(frm_QuoteDisplay, text="Quote Category: ")
         btn_GenerateQuote = tk.Button(frm_QuoteDisplay, text="Generate Quote")
@@ -158,7 +162,7 @@ def main():
             #print(r.status_code)
 
             # se imprime en consola tambien la respuesta en formato json en la terminal.
-            #print(r.text)
+            print(r.text)
 
             # Se limpia el string antes de imprimirse, solo el primer tag se imprime
             category = r.json()["tags"]
@@ -173,28 +177,10 @@ def main():
             un newline (/n) en la quote podemos poner quotes más largas.'''
 
             quote = r.json()["content"]
+            author = r.json()["author"]
             
-
-            '''
-            # Hacemos el split de la quote con todos los espacios
-            words = quote.split(" ")
-
-            acum_quote_length = 0
-            for item_index , items in enumerate(words):
-
-                acum_quote_length = acum_quote_length + (len(items)+1)
-                if (acum_quote_length >= 55):
-                    words.insert(item_index,"/n")
-                    break
-
-            print(words)
-
-            words = ' '.join(words)
-            '''
-
-
             # se imprime el nombre del autor y el contenido de la quote en el widget que corresponde
-            lbl_QuoteContent["text"] = f'\"{quote}\"\n-{r.json()["author"]}'
+            lbl_QuoteContent["text"] = f'\"{quote}\"\n-{author}'
 
 
         # Event handler del botón generate quote
